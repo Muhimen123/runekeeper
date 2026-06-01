@@ -1,10 +1,14 @@
+---
+name: springboot-rest-api
+description: Build scalable Spring Boot REST APIs using domain-based architecture, SOLID principles, DTOs, services, repositories, validation, security, and testing best practices.
+---
+
 # Spring Boot REST API Development Skill
 
 ## Goal
 
 Build scalable, maintainable, and production-ready REST APIs using Spring Boot while following modern software engineering principles.
 
----
 
 # Core Principles
 
@@ -35,7 +39,6 @@ Handles:
 * Database access
 * Response formatting
 
----
 
 ### O — Open/Closed Principle
 
@@ -49,7 +52,6 @@ interface PaymentProcessor
 
 instead of giant if-else chains.
 
----
 
 ### L — Liskov Substitution Principle
 
@@ -59,7 +61,6 @@ Avoid inheritance abuse.
 
 Prefer composition when possible.
 
----
 
 ### I — Interface Segregation Principle
 
@@ -78,7 +79,6 @@ UserWriter
 UserEverythingManager
 ```
 
----
 
 ### D — Dependency Inversion Principle
 
@@ -93,8 +93,6 @@ public class UserService {
 
 }
 ```
-
----
 
 # KISS
 
@@ -116,7 +114,6 @@ does the job.
 
 Simple code survives longer.
 
----
 
 # DRY
 
@@ -132,7 +129,6 @@ private String normalizeEmail(String email)
 
 instead of copying logic into multiple services.
 
----
 
 # YAGNI
 
@@ -146,7 +142,6 @@ Do not build:
 
 Build what is needed today.
 
----
 
 # Domain-Based Architecture
 
@@ -166,7 +161,6 @@ dto/
 
 Becomes difficult to navigate as the project grows.
 
----
 
 # Recommended Structure
 
@@ -210,7 +204,6 @@ src/main/java/com/example/app
 
 Each domain owns everything related to itself.
 
----
 
 # Controller Layer
 
@@ -241,7 +234,6 @@ public class UserController {
 
 Controller should not contain business logic.
 
----
 
 # Service Layer
 
@@ -270,7 +262,6 @@ public class UserService {
 }
 ```
 
----
 
 # Repository Layer
 
@@ -287,7 +278,6 @@ public interface UserRepository
 
 No business logic.
 
----
 
 # DTO Layer
 
@@ -314,7 +304,6 @@ public record UserResponse(
 }
 ```
 
----
 
 # Entity Layer
 
@@ -336,7 +325,6 @@ public class User {
 
 Avoid exposing entities through APIs.
 
----
 
 # Mapper Layer
 
@@ -363,7 +351,6 @@ Benefits:
 * Cleaner services
 * Centralized transformations
 
----
 
 # Validation
 
@@ -394,7 +381,6 @@ public UserResponse create(
 }
 ```
 
----
 
 # Exception Handling
 
@@ -419,7 +405,6 @@ public class GlobalExceptionHandler {
 
 Never repeat try-catch everywhere.
 
----
 
 # API Response Standardization
 
@@ -446,7 +431,6 @@ Example:
 }
 ```
 
----
 
 # Configuration Management
 
@@ -468,7 +452,6 @@ spring:
 
 Never hardcode secrets.
 
----
 
 # Logging
 
@@ -489,7 +472,6 @@ Log:
 
 Do not log passwords or secrets.
 
----
 
 # Transaction Management
 
@@ -503,7 +485,6 @@ public UserResponse create(
 
 Place transactions at the service layer.
 
----
 
 # Security
 
@@ -525,7 +506,6 @@ Keep security isolated inside:
 common/security
 ```
 
----
 
 # Testing Structure
 
@@ -550,7 +530,6 @@ Mock dependencies.
 @ExtendWith(MockitoExtension.class)
 ```
 
----
 
 ### Integration Tests
 
@@ -562,7 +541,6 @@ Use:
 
 Verify complete workflows.
 
----
 
 # Naming Conventions
 
@@ -596,7 +574,6 @@ UpdateUserRequest
 UserResponse
 ```
 
----
 
 # Dependency Injection
 
@@ -615,7 +592,6 @@ Constructor injection only.
 private UserService service;
 ```
 
----
 
 # Clean Code Checklist
 
@@ -632,7 +608,6 @@ Before writing code ask:
 * Is security considered?
 * Is the code testable?
 
----
 
 # Recommended Stack
 
@@ -667,7 +642,6 @@ Before writing code ask:
 * Mockito
 * Testcontainers
 
----
 
 # Golden Rule
 
