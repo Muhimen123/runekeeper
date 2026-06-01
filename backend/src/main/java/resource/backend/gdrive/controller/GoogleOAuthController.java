@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 // 3. Lombok Annotation Import
-import lombok.RequiredArgsConstructor;
+//import lombok.RequiredArgsConstructor;
 
 // 4. Google API Client Imports
 import com.google.api.client.auth.oauth2.TokenResponse;
@@ -26,7 +26,7 @@ import resource.backend.gdrive.repository.UserTokenRepository;
 
 @RestController
 @RequestMapping("/api/v1/oauth")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class GoogleOAuthController {
 
     @Value("${google.client-id}")
@@ -40,17 +40,24 @@ public class GoogleOAuthController {
 
     private final UserTokenRepository tokenRepository; // Your database repo to save tokens
 
-    // 1. Redirect user to Google Auth
+    public GoogleOAuthController(UserTokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
+    // 1. Redirect user to Google Auth inside GoogleOAuthController.java
     @GetMapping("/connect")
     public void connectGoogleDrive(@RequestParam String userId, HttpServletResponse response) throws IOException {
+
+        String encodedRedirectUri = java.net.URLEncoder.encode(redirectUri, java.nio.charset.StandardCharsets.UTF_8);
+
         String googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
                 "?client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
+                "&redirect_uri=" + encodedRedirectUri +
                 "&response_type=code" +
-                "&scope=https://www.googleapis.com/auth/drive.file" +
-                "&access_type=offline" + 
+                "&scope=https://www.googleapis.com/auth/drive" +
+                "&access_type=offline" +
                 "&prompt=consent" +
-                "&state=" + userId; // Pass application userId in the state
+                "&state=" + userId;
 
         response.sendRedirect(googleAuthUrl);
     }
@@ -93,6 +100,6 @@ public class GoogleOAuthController {
         tokenRepository.save(tokenEntity);
 
         // Redirect user back to Next.js dashboard
-        response.sendRedirect("http://localhost:3000/dashboard?status=success");
+        response.sendRedirect("http://localhost:3000/test");
     }
 }

@@ -22,12 +22,15 @@ import resource.backend.gdrive.entity.UserToken;
 import resource.backend.gdrive.repository.UserTokenRepository;
 
 @Service
-@RequiredArgsConstructor
 public class GoogleDriveService {
 
     // No external imports needed if UserToken and UserTokenRepository
     // are in this exact same 'resource.backend.gdrive' folder package!
     private final UserTokenRepository tokenRepository;
+
+    public GoogleDriveService(UserTokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     @Value("${google.client-id}") private String clientId;
     @Value("${google.client-secret}") private String clientSecret;
@@ -59,6 +62,16 @@ public class GoogleDriveService {
         Drive drive = getDriveService(userId);
         return drive.files().list()
                 .setPageSize(10)
+                .setFields("nextPageToken, files(id, name, mimeType)")
+                .execute()
+                .getFiles();
+    }
+
+    public List<File> listFolders(String userId) throws IOException {
+        Drive drive = getDriveService(userId);
+        return drive.files().list()
+                .setQ("'root' in parents and trashed = false")
+                .setPageSize(50)
                 .setFields("nextPageToken, files(id, name, mimeType)")
                 .execute()
                 .getFiles();
