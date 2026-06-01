@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "skills": {
+    "boy-scout": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/boy-scout/SKILL.md",
+      "computedHash": "08d8912f2f15705027bf53a8d19d8b32cd4fc57c9d302694f88cad4e7ad6270e"
+    },
+    "clean-comments": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/clean-comments/SKILL.md",
+      "computedHash": "ef5e76b029a1e71954ecc258460448cb147b4802a34b2f354b885d09a2b8c67a"
+    },
+    "clean-functions": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/clean-functions/SKILL.md",
+      "computedHash": "30959157e63ceafbd324c537f29ba0a42ee26c4df1068d1771fb316e14843b33"
+    },
+    "clean-general": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/clean-general/SKILL.md",
+      "computedHash": "54827e72b92e35fa5e60b2166d0e7cc6053532bb4a531d63d593df0fc78f8bcf"
+    },
+    "clean-names": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/clean-names/SKILL.md",
+      "computedHash": "820b7e9aa88c8636a9692e9366426b695a9b31f60c283f9e0bb94081fcf32d49"
+    },
+    "clean-tests": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python/clean-tests/SKILL.md",
+      "computedHash": "0cfa01ab07dc048e41a13014ca73062dc7b87bc4b87187f1bcf9b219986f791e"
+    },
+    "tailwind": {
+      "source": "heygen-com/hyperframes",
+      "sourceType": "github",
+      "skillPath": "skills/tailwind/SKILL.md",
+      "computedHash": "97bf0007f24e6275dcabc084c4d42f434ba48a84cec5a5b060036220239d6ddc"
+    },
+    "typescript-clean-code": {
+      "source": "ertugrul-dmr/clean-code-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript/typescript-clean-code/SKILL.md",
+      "computedHash": "307c13de1d4efa50c819c15a9f161acc4a5b579b84ed019d3a47c2cf0b9961d2"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    }
+  }
+}
