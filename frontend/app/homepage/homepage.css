@@ -16,8 +16,8 @@
 .homepage-overlay {
   position: absolute;
   inset: 0;
+  background: rgba(0, 0, 0, 0.35);
   z-index: 1;
-  top: 52px;   /* ADD - start below the topbar height */
 }
 
 .homepage-content {
