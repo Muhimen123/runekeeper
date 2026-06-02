@@ -100,6 +100,6 @@ public class GoogleOAuthController {
         tokenRepository.save(tokenEntity);
 
         // Redirect user back to Next.js dashboard
-        response.sendRedirect("http://localhost:3000/test");
+        response.sendRedirect(redirectUri);
     }
 }
