@@ -20,9 +20,10 @@ public class Resource extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "mime_type")
+    @Column(name = "mime_type", columnDefinition = "VARCHAR")
     private String mimeType;
 
     @ManyToOne(fetch = FetchType.LAZY)

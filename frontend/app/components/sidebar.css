@@ -1,0 +1,580 @@
+/* Sidebar Toggle Trigger */
+.sidebar-trigger-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #4a3318;
+  border: 3px solid #CEA864;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 90;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    inset 0 0 8px rgba(206, 168, 100, 0.3);
+  transition: all 0.2s ease;
+}
+
+.sidebar-trigger-btn:hover {
+  transform: scale(1.08) rotate(5deg);
+  background: #5c4121;
+}
+
+.sidebar-trigger-btn img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+/* Sidebar Container */
+.rpg-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 440px;
+  background: #E8C493;
+  /* Gold parchment theme */
+  border-left: 5px solid #3c2d1d;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.7);
+  z-index: 95;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  padding: 8px;
+}
+
+.rpg-sidebar.open {
+  transform: translateX(0);
+}
+
+.rpg-sidebar-inner {
+  border: 2px solid #5c472d;
+  border-radius: 8px;
+  height: 100%;
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Sidebar Header elements */
+.rpg-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  height: 48px;
+}
+
+.rpg-back-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #1a0f05;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.rpg-back-btn:hover {
+  transform: translateX(-4px);
+}
+
+.rpg-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+.rpg-close-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Compensating for empty padding in the PNG close button asset to make it display beautifully */
+.rpg-close-btn img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.rpg-sidebar-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #1a0f05;
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+}
+
+/* List of Events in Sidebar */
+.sidebar-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 6px;
+  margin-bottom: 24px;
+}
+
+.sidebar-events-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-events-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-events-list::-webkit-scrollbar-thumb {
+  background: #8a6a3a;
+  border-radius: 3px;
+}
+
+/* Single Event Card */
+.event-card {
+  position: relative;
+  background: #f1ddbf;
+  border: 3px solid #2B331A;
+  border-radius: 12px;
+  padding: 16px 20px 16px 44px;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.event-card-quest-icon {
+  position: absolute;
+  left: -12px;
+  top: -8px;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.event-card-details {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #2B331A;
+  line-height: 1.8;
+}
+
+.event-card-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #1a0f05;
+  margin-bottom: 4px;
+}
+
+/* Sidebar Menu buttons (main view) */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+/* Sidebar events footer (second view) */
+.sidebar-events-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* Search bar with magnifying glass icon */
+.rpg-search-container {
+  display: flex;
+  align-items: center;
+  background: #f1ddbf;
+  border: 3px solid #2B331A;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 380px;
+  padding: 4px 16px;
+  margin-bottom: 24px;
+  gap: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rpg-search-icon {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.rpg-search-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: none;
+  border: none;
+  color: #2B331A;
+  width: 100%;
+  outline: none;
+}
+
+.rpg-search-input::placeholder {
+  color: #8c8375;
+}
+
+/* Big Show All Events scroll list */
+.all-events-scroll {
+  width: 100%;
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 8px;
+}
+
+.all-events-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.all-events-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.all-events-scroll::-webkit-scrollbar-thumb {
+  background: #8a6a3a;
+  border-radius: 4px;
+}
+
+.all-events-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.all-events-card {
+  flex-grow: 1;
+  background: #f1ddbf;
+  border: 3px solid #2B331A;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #2B331A;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* Trash Icon Button - Stable alignment layout */
+.rpg-trash-btn {
+  background: none;
+  border: none;
+  padding: 0;
+
+  /* MINIMAL CHANGES HERE */
+  width: 70px;
+  /* Changed from 100px to 70px to match height */
+  height: 70px;
+  flex-shrink: 0;
+  /* Added to prevent the flex row from squeezing the button */
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transition: transform 80ms, filter 80ms;
+}
+
+.rpg-trash-btn img {
+  /* Now 100% means "fill exactly up to the 70px button container" */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3)) brightness(2);
+}
+
+/* Hover effects applied to the whole button wrapper */
+.rpg-trash-btn:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+/* Push down effect on click */
+.rpg-trash-btn:active {
+  transform: translateY(2px);
+}
+
+/* Add Event Modal Form Fields styling */
+.rpg-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.rpg-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.rpg-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.rpg-form-select {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: #f1ddbf;
+  border: 3px solid #2B331A;
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #2B331A;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%232B331A' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.rpg-form-input-disabled {
+  background: #d4ba96;
+  cursor: not-allowed;
+}
+
+/* Purple Plus Button */
+.rpg-plus-btn {
+  background: #735290;
+  border: 3px solid #3d2354;
+  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 80ms, filter 80ms;
+  flex-shrink: 0;
+}
+
+.rpg-plus-btn img {
+  width: 20px;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+.rpg-plus-btn:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+.rpg-plus-btn:active {
+  transform: translateY(2px);
+}
+
+/* AI Chat Dual Box */
+.rpg-chat-box {
+  border: 3px solid #2B331A;
+  background: #c5a67c;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.rpg-chat-history {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #2B331A;
+  line-height: 1.6;
+  border-bottom: 3px solid #2B331A;
+  text-align: left;
+}
+
+.rpg-chat-input-area {
+  height: 120px;
+  padding: 12px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: none;
+  border: none;
+  color: #2B331A;
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+}
+
+.rpg-chat-input-area::placeholder {
+  color: #5c4e38;
+}
+
+/* Small Wood Button (side-by-side) */
+.rpg-wood-btn-half-wrap {
+  display: inline-block;
+  position: relative;
+  padding: 4px;
+  background: #4a3318;
+  width: 180px;
+  clip-path: polygon(
+    8px 0%,
+    calc(100% - 8px) 0%,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0% calc(100% - 8px),
+    0% 8px
+  );
+}
+
+.rpg-wood-btn-half-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #8a6a3a;
+  clip-path: polygon(
+    6px 0%,
+    calc(100% - 6px) 0%,
+    100% 6px,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    6px 100%,
+    0% calc(100% - 6px),
+    0% 6px
+  );
+  z-index: 0;
+}
+
+.rpg-wood-btn-half {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #7a9e35;
+  text-shadow:
+    1px 1px 0 #2e4a00,
+    -1px -1px 0 #2e4a00,
+    1px -1px 0 #2e4a00,
+    -1px  1px 0 #2e4a00;
+  background: #c8aa6e;
+  padding: 10px 0;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
+  );
+  z-index: 2;
+  outline: none;
+}
+
+.rpg-wood-btn-half::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1.5px solid #a08040;
+  clip-path: polygon(
+    4px 0%,
+    calc(100% - 4px) 0%,
+    100% 4px,
+    100% calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    4px 100%,
+    0% calc(100% - 4px),
+    0% 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rpg-wood-btn-half:hover {
+  filter: brightness(1.08);
+}
+
+.rpg-wood-btn-half:active {
+  transform: translateY(2px);
+}
+
+/* Progress Tracker Styles */
+.progress-tracker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 6px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.progress-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-book-icon {
+  width: 48px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.progress-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #1a0f05;
+}
+
+.progress-hearts-row {
+  display: flex;
+  gap: 4px;
+}
+
+.progress-heart-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
