@@ -1,10 +1,7 @@
 package resource.backend.academic.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import resource.backend.common.entity.BaseEntity;
 import resource.backend.folder.entity.Folder;
 
@@ -14,6 +11,7 @@ import resource.backend.folder.entity.Folder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Course extends BaseEntity {
 
     @Column(nullable = false)

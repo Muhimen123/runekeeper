@@ -6,4 +6,5 @@ import resource.backend.academic.entity.Semester;
 
 @Repository
 public interface SemesterRepository extends JpaRepository<Semester, java.util.UUID> {
+    java.util.List<Semester> findByOwnerId(java.util.UUID ownerId);
 }

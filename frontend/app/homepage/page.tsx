@@ -1,18 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import HomePageTopBar from "../components/HomePageTopBar"; 
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function HomepagePage() {
-    const [rooms, setRooms] = useState([
-        { id: "1", name: "T2L1" },
-        { id: "2", name: "UwU" },
-        { id: "3", name: "fsasgnfc" },
-        { id: "4", name: "T2L1" },
-        { id: "5", name: "RuneQuest" },
-        { id: "6", name: "Mages Den" },
-    ]);
-    const [gems, setGems] = useState(1345); 
+    const router = useRouter();
+    const userId = "2deb6920-19b0-4fa9-aa5f-6364b03bce5d"; // Demo static User ID
+    const [rooms, setRooms] = useState<{ id: string; name: string }[]>([]);
 
     // Modal Visibility States
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
@@ -21,6 +15,22 @@ export default function HomepagePage() {
     // Input states
     const [roomCode, setRoomCode] = useState("");
     const [roomName, setRoomName] = useState("");
+
+    useEffect(() => {
+        fetchRooms();
+    }, []);
+
+    const fetchRooms = async () => {
+        try {
+            const res = await fetch(`http://localhost:8080/api/v1/rooms?ownerId=${userId}`);
+            if (res.ok) {
+                const data = await res.json();
+                setRooms(data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch rooms:", err);
+        }
+    };
 
     const handleJoinExisting = () => {
         setIsJoinModalOpen(true);
@@ -34,18 +44,34 @@ export default function HomepagePage() {
         console.log("Logout clicked");
     };
 
-    const handleRoomClick = (roomName: string) => {
-        console.log(`Clicked room: ${roomName}`);
+    const handleRoomClick = (roomId: string) => {
+        router.push(`/room_viewer?roomId=${roomId}`);
     };
 
-    const submitCreateRoom = () => {
+    const submitCreateRoom = async () => {
         if (roomName.trim()) {
-            setRooms((prev) => [
-                ...prev,
-                { id: String(prev.length + 1), name: roomName.trim() },
-            ]);
-            setRoomName("");
-            setIsCreateModalOpen(false);
+            try {
+                const res = await fetch("http://localhost:8080/api/v1/rooms", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: roomName.trim(),
+                        ownerId: userId,
+                    }),
+                });
+                if (res.ok) {
+                    const newRoom = await res.json();
+                    setRooms((prev) => [...prev, newRoom]);
+                    setRoomName("");
+                    setIsCreateModalOpen(false);
+                } else {
+                    console.error("Failed to create room:", res.statusText);
+                }
+            } catch (err) {
+                console.error("Failed to create room:", err);
+            }
         }
     };
 
@@ -101,7 +127,7 @@ export default function HomepagePage() {
                             <div key={room.id} className="rpg-dark-btn-wrap">
                                 <button
                                     className="rpg-dark-btn"
-                                    onClick={() => handleRoomClick(room.name)}
+                                    onClick={() => handleRoomClick(room.id)}
                                 >
                                     {room.name}
                                 </button>

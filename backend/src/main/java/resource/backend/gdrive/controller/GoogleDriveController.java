@@ -36,13 +36,15 @@ public class GoogleDriveController {
     }
 
     @GetMapping("/folders")
-    public ResponseEntity<List<File>> getFolders(@RequestParam String userId) {
-        log.info("Request received to fetch Google Drive folders for user: {}", userId);
+    public ResponseEntity<List<File>> getFolders(
+            @RequestParam String userId,
+            @RequestParam(required = false) String parentFolderId) {
+        log.info("Request received to fetch Google Drive folders for user: {} under parent: {}", userId, parentFolderId);
         try {
-            List<File> folders = googleDriveService.listFolders(userId);
+            List<File> folders = googleDriveService.listFolders(userId, parentFolderId);
             return ResponseEntity.ok(folders);
         } catch (IOException e) {
-            log.error("Failed to fetch Google Drive folders for user: {}", userId, e);
+            log.error("Failed to fetch Google Drive folders for user: {} under parent: {}", userId, parentFolderId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (IllegalArgumentException e) {
             log.error("Invalid UUID format for user: {}", userId, e);
@@ -66,6 +68,25 @@ public class GoogleDriveController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/folders")
+    public ResponseEntity<File> createFolder(
+            @RequestParam String userId,
+            @RequestParam String folderName,
+            @RequestParam(required = false) String parentFolderId) {
+        log.info("Request received to create folder '{}' under parent '{}' for user: {}", folderName, parentFolderId, userId);
+        try {
+            File createdFolder = googleDriveService.createFolder(userId, folderName, parentFolderId);
+            return ResponseEntity.ok(createdFolder);
+        } catch (IOException e) {
+            log.error("Failed to create folder for user: {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid UUID format for user: {}", userId, e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<File> uploadFile(
