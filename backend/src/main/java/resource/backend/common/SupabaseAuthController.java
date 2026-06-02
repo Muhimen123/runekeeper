@@ -123,4 +123,50 @@ public class SupabaseAuthController {
             return ResponseEntity.status(401).body(errorMap);
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        // 1. Ensure the user's bearer token is actually passed down by the frontend
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", "Missing or invalid authorization session token.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorMap);
+        }
+
+        try {
+            RestTemplate rest = new RestTemplate();
+            String url = supabaseUrl + "/auth/v1/logout";
+
+            // 2. Forward both project api-keys and the active user session token
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("apikey", supabaseKey);
+            headers.set("Authorization", authHeader); // 🔥 Passes "Bearer user_token_here"
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            // Supabase returns a 204 No Content status upon a successful session termination
+            rest.postForEntity(url, entity, String.class);
+
+            Map<String, String> successMap = new HashMap<>();
+            successMap.put("message", "Session cleared from archives successfully.");
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(successMap);
+
+        } catch (HttpStatusCodeException e) {
+            System.out.println("Supabase logout error status: " + e.getStatusCode());
+            return ResponseEntity.status(e.getStatusCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", "Logout request failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorMap);
+        }
+    }
 }

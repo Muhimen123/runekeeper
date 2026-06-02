@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import HomePageTopBar from "../components/HomePageTopBar";
 
 export default function HomepagePage() {
     const router = useRouter();
-    const userId = "2deb6920-19b0-4fa9-aa5f-6364b03bce5d"; // Demo static User ID
+    
+    // 🔥 FIX: Manage dynamic User ID from your storage instead of hardcoding a demo key
+    const [userId, setUserId] = useState<string | null>(null);
     const [rooms, setRooms] = useState<{ id: string; name: string }[]>([]);
 
     // Modal Visibility States
@@ -15,14 +18,27 @@ export default function HomepagePage() {
     // Input states
     const [roomCode, setRoomCode] = useState("");
     const [roomName, setRoomName] = useState("");
+    const [gems, setGems] = useState(0); 
 
     useEffect(() => {
-        fetchRooms();
+        // Resolve authentication metadata safely on the client side mount
+        const storedUserId = localStorage.getItem("user_id");
+        const token = localStorage.getItem("supabase_token");
+
+        // Guard clause: If no valid token is found, bounce them straight out to authentication vault
+        if (!token || !storedUserId) {
+            router.push("/");
+            return;
+        }
+
+        setUserId(storedUserId);
+        fetchRooms(storedUserId);
     }, []);
 
-    const fetchRooms = async () => {
+    const fetchRooms = async (currentUserId: string) => {
         try {
-            const res = await fetch(`http://localhost:8080/api/v1/rooms?ownerId=${userId}`);
+            // Include global context path prefix `/api/v1`
+            const res = await fetch(`http://localhost:8080/api/v1/rooms?ownerId=${currentUserId}`);
             if (res.ok) {
                 const data = await res.json();
                 setRooms(data);
@@ -40,8 +56,29 @@ export default function HomepagePage() {
         setIsCreateModalOpen(true);
     };
 
-    const handleLogout = () => {
-        console.log("Logout clicked");
+    // 🔥 FIX: ACTIVE LOGOUT ACTION FLOW ROUTINE
+    const handleLogout = async () => {
+        const token = localStorage.getItem("supabase_token");
+
+        try {
+            // Outbound sequence to destroy token mapping on the server infrastructure
+            await fetch("http://localhost:8080/api/v1/auth/logout", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+        } catch (err) {
+            console.error("Failed to cleanly terminate session from server registry:", err);
+        } finally {
+            // ALWAYS wipe data tracks completely clean regardless of network status 
+            localStorage.removeItem("supabase_token");
+            localStorage.removeItem("user_id");
+
+            // Redirect user back to public landing gate
+            router.push("/");
+        }
     };
 
     const handleRoomClick = (roomId: string) => {
@@ -49,7 +86,7 @@ export default function HomepagePage() {
     };
 
     const submitCreateRoom = async () => {
-        if (roomName.trim()) {
+        if (roomName.trim() && userId) {
             try {
                 const res = await fetch("http://localhost:8080/api/v1/rooms", {
                     method: "POST",
@@ -77,7 +114,6 @@ export default function HomepagePage() {
 
     const submitJoinRoom = () => {
         if (roomCode.trim()) {
-            // Simulate finding/joining a room
             setRooms((prev) => [
                 ...prev,
                 { id: String(prev.length + 1), name: `Room #${roomCode.trim()}` },
@@ -86,71 +122,76 @@ export default function HomepagePage() {
             setIsJoinModalOpen(false);
         }
     };
+
+    // Keep layout rendering hidden while checking client session tokens to prevent visual flicker
+    if (!userId) {
+        return <div className="homepage-container"><div className="homepage-overlay" /></div>;
+    }
+
     return (
-    <div className="homepage-container">
-        <div className="homepage-overlay" />
+        <div className="homepage-container">
+            <div className="homepage-overlay" />
 
-        {/* TOP BAR */}
-        <HomePageTopBar gems={gems} onFrameClick={() => console.log("frame clicked")} />
+            {/* TOP BAR */}
+            <HomePageTopBar gems={gems} onFrameClick={() => console.log("frame clicked")} />
 
-        {/* PANELS */}
-        <div className="homepage-content">
-            {/* Left Panel */}
-    <div className="left-panel">
-                <div className="rpg-wood-btn-wrap">
-                    <button className="rpg-wood-btn" onClick={handleJoinExisting}>
-                        Join Room
-                    </button>
-                </div>
+            {/* PANELS */}
+            <div className="homepage-content">
+                {/* Left Panel */}
+                <div className="left-panel">
+                    <div className="rpg-wood-btn-wrap">
+                        <button className="rpg-wood-btn" onClick={handleJoinExisting}>
+                            Join Room
+                        </button>
+                    </div>
 
-                <div className="rpg-wood-btn-wrap">
-                    <button className="rpg-wood-btn" onClick={handleCreateNew}>
-                        Create New Room
-                    </button>
-                </div>
+                    <div className="rpg-wood-btn-wrap">
+                        <button className="rpg-wood-btn" onClick={handleCreateNew}>
+                            Create New Room
+                        </button>
+                    </div>
 
-                <div className="rpg-wood-btn-wrap">
-                    <button className="rpg-wood-btn" onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-
-            {/* Right Panel */}
-           <div className="right-panel">
-                <div className="rooms-card">
-                    <h2 className="rooms-title">Joined Rooms</h2>
-
-                    <div className="rooms-list-scroll">
-                        {rooms.map((room) => (
-                            <div key={room.id} className="rpg-dark-btn-wrap">
-                                <button
-                                    className="rpg-dark-btn"
-                                    onClick={() => handleRoomClick(room.id)}
-                                >
-                                    {room.name}
-                                </button>
-                            </div>
-                        ))}
+                    <div className="rpg-wood-btn-wrap">
+                        <button className="rpg-wood-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
                     </div>
                 </div>
 
-                {/* Dynamic mossy rocks decoration from assets */}
-                <img
-                    src="/assets/stone_1.png"
-                    alt="Mossy Rock Left"
-                    className="mossy-rock-left"
-                />
-                <img
-                    src="/assets/stone_2.png"
-                    alt="Mossy Rock Right"
-                    className="mossy-rock-right"
-                />
-            </div>
-        </div>
+                {/* Right Panel */}
+                <div className="right-panel">
+                    <div className="rooms-card">
+                        <h2 className="rooms-title">Joined Rooms</h2>
 
-      {isCreateModalOpen && (
+                        <div className="rooms-list-scroll">
+                            {rooms.map((room) => (
+                                <div key={room.id} className="rpg-dark-btn-wrap">
+                                    <button
+                                        className="rpg-dark-btn"
+                                        onClick={() => handleRoomClick(room.id)}
+                                    >
+                                        {room.name}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Dynamic mossy rocks decoration from assets */}
+                    <img
+                        src="/assets/stone_1.png"
+                        alt="Mossy Rock Left"
+                        className="mossy-rock-left"
+                    />
+                    <img
+                        src="/assets/stone_2.png"
+                        alt="Mossy Rock Right"
+                        className="mossy-rock-right"
+                    />
+                </div>
+            </div>
+
+            {isCreateModalOpen && (
                 <div className="modal-backdrop" onClick={() => setIsCreateModalOpen(false)}>
                     <div className="rpg-modal-card" onClick={(e) => e.stopPropagation()}>
                         <div className="rpg-modal-inner">
@@ -214,6 +255,6 @@ export default function HomepagePage() {
                     </div>
                 </div>
             )}
-    </div>
-);
+        </div>
+    );
 }
