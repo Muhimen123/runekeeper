@@ -1,0 +1,88 @@
+.status-msg-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    width: 420px;
+    background-color: #E8C97A;
+    border: 3px solid #5a4a2a;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.5); /* Optional: blends it better into dark backgrounds */
+}
+
+.status-msg-inner {
+    border: 2px solid #5a4a2a;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative; /* Anchors the close button */
+}
+
+/* New layout wrapper to hold everything aligned on the left side */
+.status-msg-content-wrapper {
+    display: flex;
+    align-items: flex-start; /* Aligns icon to the top of the text block */
+    gap: 16px;              /* Space between icon and text */
+    padding-right: 32px;    /* Prevents text from overlapping the close button */
+}
+
+.status-msg-icon {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+    flex-shrink: 0;         /* Keeps the icon from squishing */
+}
+
+/* New vertical layout for the text blocks */
+.status-msg-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;               /* Space between Title and Body text */
+}
+
+.status-msg-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: bold;
+}
+
+.status-msg-body {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;        /* Slightly lowered size for better layout tracking */
+    line-height: 1.5;       /* Gives retro font tracking a cleaner look */
+    color: #1a1a1a;
+    margin: 0;
+}
+
+/* Absolute Positioning for the button */
+.rpg-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+}
+
+.rpg-close-btn img {
+    width: 36px;
+    height: 36px;
+    image-rendering: pixelated;
+    display: block;
+}
+
+/* Hover Asset Swapping toggles */
+.rpg-close-btn .hover-cross {
+    display: none;
+}
+
+.rpg-close-btn:hover .default-cross {
+    display: none;
+}
+
+.rpg-close-btn:hover .hover-cross {
+    display: block;
+}
