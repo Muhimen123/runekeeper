@@ -171,6 +171,28 @@ CREATE TABLE user_badges (
 );
 
 -- =============================================================================
+-- SECTION 3b: GOOGLE DRIVE OAUTH CREDENTIALS
+-- =============================================================================
+-- Stores encrypted OAuth credentials for users who link their own Google Drives.
+-- PRIMARY KEY(user_id) ensures exactly one active Google integration per user account.
+
+CREATE TABLE user_google_tokens (
+    user_id       UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    access_token  TEXT NOT NULL,
+    refresh_token TEXT NOT NULL, -- Keep this safely guarded!
+    expiry_time   TIMESTAMPTZ NOT NULL,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER trg_user_google_tokens_updated_at
+    BEFORE UPDATE ON user_google_tokens
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- Index for checking integration status quickly
+CREATE INDEX idx_user_google_tokens_user_id ON user_google_tokens(user_id);
+
+-- =============================================================================
 -- SECTION 4: DRIVE-BACKED FOLDER HIERARCHY
 -- =============================================================================
 -- Self-referencing parent_id supports arbitrary folder depth.
