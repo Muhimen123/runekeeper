@@ -86,11 +86,17 @@ export default function HomepagePage() {
             setIsJoinModalOpen(false);
         }
     };
-
     return (
-        <>
-            {/* Left Panel - Control Buttons */}
-            <div className="left-panel">
+    <div className="homepage-container">
+        <div className="homepage-overlay" />
+
+        {/* TOP BAR */}
+        <HomePageTopBar gems={gems} onFrameClick={() => console.log("frame clicked")} />
+
+        {/* PANELS */}
+        <div className="homepage-content">
+            {/* Left Panel */}
+    <div className="left-panel">
                 <div className="rpg-wood-btn-wrap">
                     <button className="rpg-wood-btn" onClick={handleJoinExisting}>
                         Join Existing Room
@@ -110,8 +116,9 @@ export default function HomepagePage() {
                 </div>
             </div>
 
-            {/* Right Panel - Joined Rooms with Scrollable Custom Buttons */}
-            <div className="right-panel">
+
+            {/* Right Panel */}
+           <div className="right-panel">
                 <div className="rooms-card">
                     <h2 className="rooms-title">Joined Rooms</h2>
 
@@ -141,9 +148,9 @@ export default function HomepagePage() {
                     className="mossy-rock-right"
                 />
             </div>
+        </div>
 
-            {/* Modal: Create Room */}
-            {isCreateModalOpen && (
+      {isCreateModalOpen && (
                 <div className="modal-backdrop" onClick={() => setIsCreateModalOpen(false)}>
                     <div className="rpg-modal-card" onClick={(e) => e.stopPropagation()}>
                         <div className="rpg-modal-inner">
@@ -207,6 +214,6 @@ export default function HomepagePage() {
                     </div>
                 </div>
             )}
-        </>
-    );
+    </div>
+);
 }

@@ -1,7 +1,8 @@
 .homepage-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   min-height: 100vh;
   width: 100%;
   background-image: url('/assets/bg_front.png');
@@ -9,28 +10,30 @@
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
-  padding: 40px;
+  padding: 0;   /* remove 40px */
 }
 
 .homepage-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 1;
 }
 
 .homepage-content {
   position: relative;
   z-index: 2;
-  display: grid;
+  display: grid;                    /* MUST be grid */
   grid-template-columns: 1fr 1.2fr;
   gap: 60px;
   width: 100%;
   max-width: 1100px;
+  align-self: center;
+  flex: 1;
   align-items: center;
+  padding: 40px;
   animation: fadeIn 0.8s ease-out;
 }
-
 .left-panel {
   display: flex;
   flex-direction: column;

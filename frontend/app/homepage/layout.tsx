@@ -1,5 +1,5 @@
 import React from "react";
-import "../auth_init/auth.css"; // Reuse general buttons/fonts
+import "../auth_init/auth.css";
 import "./homepage.css";
 
 export const metadata = {
@@ -12,12 +12,5 @@ export default function HomepageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="homepage-container">
-      <div className="homepage-overlay" />
-      <div className="homepage-content">
-        {children}
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }
