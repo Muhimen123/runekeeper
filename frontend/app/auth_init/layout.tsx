@@ -12,8 +12,8 @@ export default function AuthInitLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="auth-container">
-      <div className="auth-overlay" />
+    <div>
+      <div className="bg-overlay" />
       <div className="auth-content">
         {children}
       </div>

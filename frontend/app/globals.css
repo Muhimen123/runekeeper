@@ -1,29 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import "tailwindcss";
 
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Press Start 2P", Arial;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-image: url('/assets/bg_front.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  /* padding: 20px; */
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.content-effects {
+  position: relative;
+  z-index: 2;
+  /* display: flex;
+  flex-direction: column; */
+  /* align-items: center; */
+  gap: 40px;
+  /* text-align: center; */
+  animation: fadeIn 1s ease-out;
+}
+
+.text-stroke-green {
+   text-shadow:
+      3.5px 3.5px 0 var(--color-dark-green),
+     -3.5px -3.5px 0 var(--color-dark-green),  
+      3.5px -3.5px 0 var(--color-dark-green),
+      -3.5px 3.5px 0 var(--color-dark-green);
+    }
+
+
+@theme inline{
+  --color-*: initial;
+  --color-beige: oklch(75.241% 0.09675 79.993);
+  --color-beige-hover: oklch(84.038% 0.08416 76.862);
+  --color-dark-green: oklch(33.087% 0.04069 121.913);
+  --color-light-green: oklch(65.1% 0.13832 126.25);
+
+  --animate-fade-in: fadeIn 1s ease-out;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

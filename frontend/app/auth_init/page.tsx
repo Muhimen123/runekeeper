@@ -1,18 +1,10 @@
 "use client";
 
-import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function AuthInitPage() {
-  const handleLogin = () => {
-    // Add routing or event handler as needed later
-    console.log("Login clicked");
-  };
 
-  const handleSignUp = () => {
-    // Add routing or event handler as needed later
-    console.log("Sign Up clicked");
-  };
-
+  const router = useRouter();
   return (
     <>
       <div className="runekeeper-logo-container">
@@ -21,13 +13,13 @@ export default function AuthInitPage() {
 
       <div className="button-group">
         <div className="rpg-wood-btn-wrap">
-          <button className="rpg-wood-btn" onClick={handleLogin}>
+          <button className="rpg-wood-btn" onClick={()=>router.push("/login")}>
             Login
           </button>
         </div>
 
         <div className="rpg-wood-btn-wrap">
-          <button className="rpg-wood-btn" onClick={handleSignUp}>
+          <button className="rpg-wood-btn" onClick={()=>router.push("/signup")}>
             Sign Up
           </button>
         </div>
