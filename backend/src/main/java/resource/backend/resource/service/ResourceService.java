@@ -38,19 +38,33 @@ public class ResourceService {
 
     @Transactional
     public List<ResourceResponse> uploadResources(String userIdStr, MultipartFile[] files, String folderIdStr) throws IOException {
-        log.info("Starting resource upload process for user: {}, folder: {}, files count: {}", userIdStr, folderIdStr, files.length);
+        log.info("Starting resource upload process for user: {}, local folder UUID: {}, files count: {}", userIdStr, folderIdStr, files.length);
 
+        // 1. Resolve User Context
         UUID userId = UUID.fromString(userIdStr);
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userIdStr));
 
+        // 2. FIXED: Local Database Folder Lookup Strategy
+        // We now look up by local primary key UUID since the Next.js Course Viewer tracks local folder IDs.
         Folder folder = null;
         if (folderIdStr != null && !folderIdStr.trim().isEmpty() && !folderIdStr.equalsIgnoreCase("root")) {
-            folder = folderRepository.findByDriveFolderId(folderIdStr).orElse(null);
-            if (folder == null) {
-                log.warn("Folder with drive ID {} not found in database. The files will be uploaded without local folder association.", folderIdStr);
+            try {
+                UUID localFolderUuid = UUID.fromString(folderIdStr);
+                folder = folderRepository.findById(localFolderUuid).orElse(null);
+                if (folder == null) {
+                    log.warn("Folder with local database UUID {} not found in archives. Uploading with unassociated path.", folderIdStr);
+                }
+            } catch (IllegalArgumentException e) {
+                // Fallback boundary check: if it is not a valid UUID string, try looking up by Google Drive folder ID
+                log.info("folderIdStr is not a local UUID format. Attempting fallback lookup via drive_folder_id for: {}", folderIdStr);
+                folder = folderRepository.findByDriveFolderId(folderIdStr).orElse(null);
             }
         }
+
+        // 3. Resolve parent drive target context to present to Google Drive Client Wrapper
+        // If local folder tracking exists, extract its real drive chain identifier string.
+        String targetDriveFolderId = (folder != null) ? folder.getDriveFolderId() : folderIdStr;
 
         List<ResourceResponse> responses = new ArrayList<>();
 
@@ -59,20 +73,20 @@ public class ResourceService {
                 continue;
             }
 
-            // 1. Upload the file to Google Drive
+            // 4. Upload raw binary file to physical Google Drive chamber
             log.info("Uploading file to Google Drive: {}", multipartFile.getOriginalFilename());
-            com.google.api.services.drive.model.File driveFile = googleDriveService.uploadFile(userIdStr, multipartFile, folderIdStr);
+            com.google.api.services.drive.model.File driveFile = googleDriveService.uploadFile(userIdStr, multipartFile, targetDriveFolderId);
 
-            // 2. Map mimeType to ResourceType
+            // 5. Categorize resource types cleanly
             ResourceType resourceType = mapMimeTypeToResourceType(driveFile.getMimeType());
 
-            // 3. Save Resource metadata in Database
+            // 6. Persist structured metadata into local PostgreSQL tables
             Resource resource = new Resource();
             resource.setName(driveFile.getName());
             resource.setDescription(null);
             resource.setMimeType(driveFile.getMimeType());
             resource.setOwner(owner);
-            resource.setFolder(folder);
+            resource.setFolder(folder); // Safely sets the correct relational mapping via local folder entity reference
             resource.setResourceType(resourceType);
             resource.setDriveFileId(driveFile.getId());
             resource.setDriveUrl(driveFile.getWebViewLink() != null ? driveFile.getWebViewLink() : "");
@@ -82,7 +96,7 @@ public class ResourceService {
             Resource savedResource = resourceRepository.save(resource);
             log.info("Saved resource to database with ID: {}", savedResource.getId());
 
-            // 4. Award 50 points to the user for uploading the file
+            // 7. Gamification System execution
             RewardEvent rewardEvent = new RewardEvent();
             rewardEvent.setUser(owner);
             rewardEvent.setAction(RewardAction.RESOURCE_UPLOAD);
@@ -92,7 +106,7 @@ public class ResourceService {
             rewardEventRepository.save(rewardEvent);
             log.info("Awarded 50 points to user {} for uploading resource {}", userId, savedResource.getId());
 
-            // 5. Build response record using strict defensive checks to prevent NullPointerExceptions
+            // 8. Output Response Array Mapping
             responses.add(new ResourceResponse(
                     savedResource.getId(),
                     savedResource.getName(),

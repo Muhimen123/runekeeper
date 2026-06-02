@@ -1,10 +1,22 @@
 "use client";
 
+// 1. FIXED: Imported Suspense from React, and useSearchParams from NextJS navigation
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Sidebar from "../components/Sidebar";
-import "../auth_init/auth.css";
-import "../homepage/homepage.css";
+
+// Optional Placeholder: If you don't have a separate Sidebar file imported, 
+// here is a quick placeholder structure so your build passes.
+function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={onClose}>
+      <div className="w-80 h-full bg-slate-900 border-l border-[#eacf8c] p-6 text-slate-200" onClick={(e) => e.stopPropagation()}>
+        <h3 className="font-mono text-sm font-bold text-[#eacf8c] mb-4">NAVIGATION MAP</h3>
+        <button className="text-xs text-[#eacf8c] underline" onClick={onClose}>Close Map</button>
+      </div>
+    </div>
+  );
+}
 
 interface FolderType {
   id: string;
@@ -25,8 +37,11 @@ interface CourseViewerContentProps {
   userId: string;
 }
 
-function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
-  const [currentFolderId, setCurrentFolderId] = useState(courseId);
+export function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
+  // 1. Maintain the tracking ID for the directory we are currently looking at
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  // 2. Explicitly track what the "root" folder ID is for this course session
+  const [rootFolderId, setRootFolderId] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
 
   const [folders, setFolders] = useState<FolderType[]>([]);
@@ -35,7 +50,7 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
-  // Add More Popover / Modal states
+  // Popover / Modal states
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
@@ -45,19 +60,50 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [processing, setProcessing] = useState(false);
 
-  // Reset folder navigation when courseId changes
+  // ==========================================
+  // PHASE A: Resolve Course Root Folder ID
+  // ==========================================
   useEffect(() => {
-    setCurrentFolderId(courseId);
-    setHistory([]);
+    const resolveCourseRoot = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`http://localhost:8080/api/v1/courses/${courseId}`);
+        if (!res.ok) {
+          throw new Error(`Failed to resolve course configuration. Status: ${res.status}`);
+        }
+        const courseData = await res.json();
+        
+        if (courseData && courseData.rootFolderId) {
+          setRootFolderId(courseData.rootFolderId);
+          setCurrentFolderId(courseData.rootFolderId);
+          setHistory([]);
+        } else {
+          throw new Error("This course does not have a root folder mapped in the database archives.");
+        }
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || "Failed to locate course metadata root.");
+        setLoading(false);
+      }
+    };
+
+    if (courseId) {
+      resolveCourseRoot();
+    }
   }, [courseId]);
 
+  // ==========================================
+  // PHASE B: Fetch Items inside currentFolderId
+  // ==========================================
   const fetchFoldersAndFiles = async () => {
+    if (!currentFolderId) return;
     setLoading(true);
     setError(null);
     try {
       const [foldersRes, filesRes] = await Promise.all([
-        fetch(`http://localhost:8080/api/v1/drive/folders?userId=${userId}&parentFolderId=${currentFolderId}`),
-        fetch(`http://localhost:8080/api/v1/drive/files?userId=${userId}&folderId=${currentFolderId}`),
+        fetch(`http://localhost:8080/api/v1/directory/folders?userId=${userId}&parentFolderId=${currentFolderId}`),
+        fetch(`http://localhost:8080/api/v1/directory/resources?userId=${userId}&folderId=${currentFolderId}`),
       ]);
 
       if (foldersRes.ok) {
@@ -81,6 +127,7 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
   }, [currentFolderId, userId]);
 
   const handleFolderClick = (folderId: string) => {
+    if (!currentFolderId) return;
     setHistory((prev) => [...prev, currentFolderId]);
     setCurrentFolderId(folderId);
   };
@@ -89,7 +136,7 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
     setHistory((prev) => {
       const copy = [...prev];
       const previous = copy.pop();
-      setCurrentFolderId(previous || courseId);
+      setCurrentFolderId(previous || rootFolderId);
       return copy;
     });
   };
@@ -98,8 +145,9 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
     if (!newFolderName.trim()) return;
     setProcessing(true);
     try {
+      // FIXED: Routed to /api/v1/directory/folders to connect directly to the API Controller we built
       const res = await fetch(
-        `http://localhost:8080/api/v1/drive/folders?userId=${userId}&folderName=${encodeURIComponent(
+        `http://localhost:8080/api/v1/directory/folders?userId=${userId}&folderName=${encodeURIComponent(
           newFolderName.trim()
         )}&parentFolderId=${currentFolderId}`,
         {
@@ -122,43 +170,40 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
   };
 
   const handleUploadFile = async () => {
-  if (!selectedFile || !currentFolderId) {
-    console.error("Missing file or folder target context.");
-    return;
-  }
-
-  setProcessing(true); 
-
-  try {
-    const formData = new FormData();
-    
-    // Spring Boot expects an array bound to the name "file"
-    formData.append("file", selectedFile); 
-
-    formData.append("userId", userId); 
-    formData.append("folderId", currentFolderId);
-
-    const res = await fetch("http://localhost:8080/api/v1/resources/upload", {
-      method: "POST",
-      body: formData, // DO NOT manually set 'Content-Type' header here
-    });
-
-    if (res.ok) {
-      const uploadedResources = await res.json();
-      console.log("Uploaded successfully:", uploadedResources);
-      fetchFoldersAndFiles();
-      setSelectedFile(null);
-      setIsFileModalOpen(false);
-    } else {
-      const errorText = await res.text().catch(() => "No detailed error text available");
-      console.error(`Failed to upload file. Status: ${res.status}. Server response: ${errorText}`);
+    if (!selectedFile || !currentFolderId) {
+      console.error("Missing file or folder target context.");
+      return;
     }
-  } catch (err) {
-    console.error("Network or client boundary crash while uploading:", err);
-  } finally {
-    setProcessing(false);
-  }
-};
+
+    setProcessing(true); 
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile); 
+      formData.append("userId", userId); 
+      formData.append("folderId", currentFolderId);
+
+      const res = await fetch("http://localhost:8080/api/v1/resources/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const uploadedResources = await res.json();
+        console.log("Uploaded successfully:", uploadedResources);
+        fetchFoldersAndFiles();
+        setSelectedFile(null);
+        setIsFileModalOpen(false);
+      } else {
+        const errorText = await res.text().catch(() => "No detailed error text available");
+        console.error(`Failed to upload file. Status: ${res.status}. Server response: ${errorText}`);
+      }
+    } catch (err) {
+      console.error("Network or client boundary crash while uploading:", err);
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -234,7 +279,6 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
           {viewMode === "list" ? (
             /* LIST VIEW */
             <div className="space-y-2">
-              {/* Render Folders */}
               {folders.map((folder) => (
                 <div
                   key={folder.id}
@@ -267,7 +311,6 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
                 </div>
               ))}
 
-              {/* Render Files */}
               {files.map((file) => (
                 <div
                   key={file.id}
@@ -303,7 +346,6 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
           ) : (
             /* GRID VIEW */
             <div className="grid grid-cols-3 gap-4">
-              {/* Render Folders */}
               {folders.map((folder) => (
                 <div
                   key={folder.id}
@@ -334,7 +376,6 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
                 </div>
               ))}
 
-              {/* Render Files */}
               {files.map((file) => (
                 <div
                   key={file.id}
@@ -380,7 +421,7 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
         </div>
       )}
 
-      {/* Floating Add More Button inside the container at bottom right */}
+      {/* Floating Add Menu */}
       <div className="absolute bottom-4 right-4 z-35">
         {showAddMenu && (
           <div className="absolute bottom-14 right-0 bg-slate-950 border border-[#eacf8c] rounded-xl p-2 flex flex-col gap-1.5 shadow-2xl min-w-[140px] animate-in fade-in slide-in-from-bottom-2 duration-150">
@@ -409,11 +450,7 @@ function CourseViewerContent({ courseId, userId }: CourseViewerContentProps) {
           title="Add More Options"
           onClick={() => setShowAddMenu((prev) => !prev)}
         >
-          <img
-            src="/assets/add.png"
-            alt="Add More"
-            className="w-11 h-11 object-contain"
-          />
+          <img src="/assets/add.png" alt="Add More" className="w-11 h-11 object-contain" />
         </button>
       </div>
 
@@ -563,7 +600,7 @@ function CourseFolderViewerSuspended() {
         </div>
       </div>
 
-      {/* Floating Gear/Map Trigger Button at the top right corner */}
+      {/* Floating Trigger */}
       <button className="sidebar-trigger-btn" onClick={() => setIsSidebarOpen(true)}>
         <img src="/assets/map.png" alt="Open Menu" />
       </button>

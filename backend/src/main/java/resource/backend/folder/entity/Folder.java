@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import resource.backend.common.entity.BaseEntity;
 import resource.backend.user.entity.User;
+import java.util.UUID;
 
 @Entity
 @Table(name = "folders")
@@ -23,6 +24,10 @@ public class Folder extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Folder parent;
+
+    // --- ADD THIS RENDER READ-ONLY FIELD FOR EASY API QUERYING ---
+    @Column(name = "parent_id", insertable = false, updatable = false)
+    private UUID parentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

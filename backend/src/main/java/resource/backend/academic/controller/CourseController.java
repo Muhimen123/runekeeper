@@ -20,6 +20,20 @@ public class CourseController {
         private final CourseService courseService;
 
         /**
+         * 🔥 NEW OVERLOADED ENDPOINT FOR COURSE VIEWER (PHASE A FIX)
+         * This uses a direct, absolute path targeting the precise format
+         * your Next.js frontend calls. Leading slash tells Spring to ignore
+         * the class-level "/rooms/{roomId}/courses" prefix entirely.
+         */
+//        @GetMapping("/api/v1/courses/{courseId}")
+//        public CourseResponse getCourseDirectlyWithoutRoom(@PathVariable UUID courseId) {
+//                // Delegates directly using a dummy room fallback if required,
+//                // or calls a simple findById on the core service layer.
+//                // Assuming your service allows a simple fetch:
+//                return courseService.getCourse(null, courseId);
+//        }
+
+        /**
          * Fetches all courses belonging to the given room (semester).
          * Changed from Page<CourseResponse> to List<CourseResponse> to match Next.js array expectations.
          */

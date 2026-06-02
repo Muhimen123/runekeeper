@@ -49,14 +49,24 @@ public class CourseServiceImpl implements CourseService {
         @Override
         @Transactional(readOnly = true)
         public CourseResponse getCourse(
-                        UUID semesterId,
-                        UUID courseId) {
+                UUID semesterId,
+                UUID courseId) {
 
-                Course course = courseRepository
+                Course course;
+
+                if (semesterId == null) {
+                        // 1. Direct lookup for the Course Viewer Page (Phase A Fix)
+                        course = courseRepository
+                                .findById(courseId)
+                                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+                } else {
+                        // 2. Existing room/semester relationship validation logic
+                        course = courseRepository
                                 .findByIdAndSemesterId(
-                                                courseId,
-                                                semesterId)
-                                .orElseThrow(() -> new RuntimeException("Course not found"));
+                                        courseId,
+                                        semesterId)
+                                .orElseThrow(() -> new RuntimeException("Course not found in this semester"));
+                }
 
                 return toResponse(course);
         }
