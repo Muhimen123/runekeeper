@@ -21,7 +21,9 @@ export default function HomePageTopBar({ gems, onFrameClick }: HomepageTopBarPro
       </div>
 
       <style jsx>{`
-        .topbar {
+.topbar {
+          position: relative;
+          z-index: 2;
           display: flex;
           align-items: center;
           justify-content: space-between;
