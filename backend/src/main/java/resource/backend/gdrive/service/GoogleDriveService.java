@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import resource.backend.gdrive.entity.UserToken;
 import resource.backend.gdrive.repository.UserTokenRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class GoogleDriveService {
@@ -58,11 +60,16 @@ public class GoogleDriveService {
                 .build();
     }
 
-    public List<File> listFiles(String userId) throws IOException {
+    public List<File> listFiles(String userId, String folderId) throws IOException {
         Drive drive = getDriveService(userId);
+        String parentId = (folderId != null && !folderId.trim().isEmpty() && !folderId.equalsIgnoreCase("root"))
+                ? folderId
+                : "root";
+
         return drive.files().list()
-                .setPageSize(10)
-                .setFields("nextPageToken, files(id, name, mimeType)")
+                .setQ("'" + parentId + "' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'")
+                .setPageSize(50)
+                .setFields("nextPageToken, files(id, name, mimeType, webViewLink, size)")
                 .execute()
                 .getFiles();
     }
@@ -70,10 +77,34 @@ public class GoogleDriveService {
     public List<File> listFolders(String userId) throws IOException {
         Drive drive = getDriveService(userId);
         return drive.files().list()
-                .setQ("'root' in parents and trashed = false")
+                .setQ("'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'")
                 .setPageSize(50)
                 .setFields("nextPageToken, files(id, name, mimeType)")
                 .execute()
                 .getFiles();
+    }
+
+    public File uploadFile(String userId, MultipartFile multipartFile, String parentFolderId) throws IOException {
+        Drive drive = getDriveService(userId);
+
+        File fileMetadata = new File();
+        fileMetadata.setName(multipartFile.getOriginalFilename());
+        if (parentFolderId != null && !parentFolderId.trim().isEmpty() && !parentFolderId.equalsIgnoreCase("root")) {
+            fileMetadata.setParents(List.of(parentFolderId));
+        }
+
+        InputStreamContent mediaContent = new InputStreamContent(
+                multipartFile.getContentType(),
+                multipartFile.getInputStream()
+        );
+
+        return drive.files().create(fileMetadata, mediaContent)
+                .setFields("id, name, mimeType, webViewLink, webContentLink")
+                .execute();
+    }
+
+    public void deleteFile(String userId, String fileId) throws IOException {
+        Drive drive = getDriveService(userId);
+        drive.files().delete(fileId).execute();
     }
 }
