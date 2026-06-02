@@ -1,0 +1,147 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< resource:backend >--------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.6:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ backend ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 78 source files with javac [debug parameters release 17] to target/classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory /Users/muhimen/Development/resource_aggregator/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:4.0.6:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.6:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-06-02T16:52:32.302+06:00  INFO 9338 --- [backend] [           main] resource.backend.BackendApplication      : Starting BackendApplication using Java 25.0.2 with PID 9338 (/Users/muhimen/Development/resource_aggregator/backend/target/classes started by muhimen in /Users/muhimen/Development/resource_aggregator/backend)
+2026-06-02T16:52:32.304+06:00  INFO 9338 --- [backend] [           main] resource.backend.BackendApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-06-02T16:52:32.705+06:00  INFO 9338 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-02T16:52:32.779+06:00  INFO 9338 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 70 ms. Found 28 JPA repository interfaces.
+2026-06-02T16:52:33.147+06:00  INFO 9338 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-06-02T16:52:33.156+06:00  INFO 9338 --- [backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-02T16:52:33.157+06:00  INFO 9338 --- [backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-06-02T16:52:33.188+06:00  INFO 9338 --- [backend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 849 ms
+2026-06-02T16:52:33.310+06:00  INFO 9338 --- [backend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-06-02T16:52:33.346+06:00  INFO 9338 --- [backend] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-06-02T16:52:33.635+06:00  INFO 9338 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-02T16:52:33.657+06:00  INFO 9338 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-02T16:52:35.207+06:00  INFO 9338 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2b058bfd
+2026-06-02T16:52:35.209+06:00  INFO 9338 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-02T16:52:36.353+06:00  INFO 9338 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?user=postgres.rabzzsdfbqicpiflcltk&password=eLJma9oyLKFPcg1V&prepareThreshold=0]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.6
+	Default catalog/schema: postgres/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-02T16:52:37.130+06:00  INFO 9338 --- [backend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-02T16:52:39.380+06:00  INFO 9338 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-02T16:52:39.460+06:00  INFO 9338 --- [backend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-02T16:52:39.735+06:00  WARN 9338 --- [backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-02T16:52:40.115+06:00  INFO 9338 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/api/v1'
+2026-06-02T16:52:40.119+06:00  INFO 9338 --- [backend] [           main] resource.backend.BackendApplication      : Started BackendApplication in 8.082 seconds (process running for 8.33)
+2026-06-02T16:53:07.174+06:00  INFO 9338 --- [backend] [nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-02T16:53:07.175+06:00  INFO 9338 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-02T16:53:07.180+06:00  INFO 9338 --- [backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2026-06-02T16:53:07.249+06:00  INFO 9338 --- [backend] [nio-8080-exec-1] r.b.g.controller.GoogleDriveController   : Request received to fetch Google Drive folders for user: 2deb6920-19b0-4fa9-aa5f-6364b03bce5d under parent: 1iCuyG7atLYYYPocLE_U0tUF1J3P-EQsv
+2026-06-02T16:53:07.249+06:00  INFO 9338 --- [backend] [nio-8080-exec-2] r.b.g.controller.GoogleDriveController   : Request received to fetch Google Drive files for user: 2deb6920-19b0-4fa9-aa5f-6364b03bce5d in folder: 1iCuyG7atLYYYPocLE_U0tUF1J3P-EQsv
+Hibernate: 
+    select
+        ut1_0.user_id,
+        ut1_0.access_token,
+        ut1_0.created_at,
+        ut1_0.expiry_time,
+        ut1_0.refresh_token,
+        ut1_0.updated_at 
+    from
+        user_google_tokens ut1_0 
+    where
+        ut1_0.user_id=?
+Hibernate: 
+    select
+        ut1_0.user_id,
+        ut1_0.access_token,
+        ut1_0.created_at,
+        ut1_0.expiry_time,
+        ut1_0.refresh_token,
+        ut1_0.updated_at 
+    from
+        user_google_tokens ut1_0 
+    where
+        ut1_0.user_id=?
+2026-06-02T16:57:35.114+06:00  INFO 9338 --- [backend] [nio-8080-exec-7] r.b.g.controller.GoogleDriveController   : Request received to fetch Google Drive folders for user: 2deb6920-19b0-4fa9-aa5f-6364b03bce5d under parent: 1iCuyG7atLYYYPocLE_U0tUF1J3P-EQsv
+2026-06-02T16:57:35.114+06:00  INFO 9338 --- [backend] [nio-8080-exec-6] r.b.g.controller.GoogleDriveController   : Request received to fetch Google Drive files for user: 2deb6920-19b0-4fa9-aa5f-6364b03bce5d in folder: 1iCuyG7atLYYYPocLE_U0tUF1J3P-EQsv
+Hibernate: 
+    select
+        ut1_0.user_id,
+        ut1_0.access_token,
+        ut1_0.created_at,
+        ut1_0.expiry_time,
+        ut1_0.refresh_token,
+        ut1_0.updated_at 
+    from
+        user_google_tokens ut1_0 
+    where
+        ut1_0.user_id=?
+Hibernate: 
+    select
+        ut1_0.user_id,
+        ut1_0.access_token,
+        ut1_0.created_at,
+        ut1_0.expiry_time,
+        ut1_0.refresh_token,
+        ut1_0.updated_at 
+    from
+        user_google_tokens ut1_0 
+    where
+        ut1_0.user_id=?
+2026-06-02T16:59:36.983+06:00  INFO 9338 --- [backend] [ionShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-02T16:59:36.995+06:00  INFO 9338 --- [backend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-06-02T16:59:37.001+06:00  INFO 9338 --- [backend] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-02T16:59:37.007+06:00  INFO 9338 --- [backend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-02T16:59:37.134+06:00  INFO 9338 --- [backend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  07:08 min
+[INFO] Finished at: 2026-06-02T16:59:37+06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.0.6:run (default-cli) on project backend: Process terminated with exit code: 143 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

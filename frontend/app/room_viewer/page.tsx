@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import "../auth_init/auth.css";
 import "../homepage/homepage.css";
@@ -25,6 +25,7 @@ interface DirectoryViewerProps {
 }
 
 function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
+  const router = useRouter();
   const [folders, setFolders] = useState<FolderType[]>([]);
   const [roomDetails, setRoomDetails] = useState<RoomDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -159,6 +160,7 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
                 <div
                   key={folder.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-[#eacf8c]/10 hover:border-[#eacf8c]/40 transition duration-200 group cursor-pointer"
+                  onClick={() => router.push(`/course_folder_viewer?courseId=${folder.id}`)}
                 >
                   <div className="flex items-center gap-3">
                     <img
@@ -194,6 +196,7 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
                 <div
                   key={folder.id}
                   className="relative flex flex-col items-center p-4 rounded-lg bg-white/5 hover:bg-white/10 border border-[#eacf8c]/10 hover:border-[#eacf8c]/40 transition duration-200 group cursor-pointer text-center"
+                  onClick={() => router.push(`/course_folder_viewer?courseId=${folder.id}`)}
                 >
                   <button
                     className="absolute top-2 right-2 opacity-50 hover:opacity-100 hover:scale-105 transition duration-150 p-1 rounded"
