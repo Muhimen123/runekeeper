@@ -7,8 +7,34 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-family: "Press Start 2P", Arial;
-  background-image: url("/assets/bg_front.png");
-  /* color:  */
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-image: url('/assets/bg_front.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  /* padding: 20px; */
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.content-effects {
+  position: relative;
+  z-index: 2;
+  /* display: flex;
+  flex-direction: column; */
+  /* align-items: center; */
+  gap: 40px;
+  /* text-align: center; */
+  animation: fadeIn 1s ease-out;
 }
 
 .text-stroke-green {
@@ -26,4 +52,16 @@ body {
   --color-beige-hover: oklch(84.038% 0.08416 76.862);
   --color-dark-green: oklch(33.087% 0.04069 121.913);
   --color-light-green: oklch(65.1% 0.13832 126.25);
+
+  --animate-fade-in: fadeIn 1s ease-out;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

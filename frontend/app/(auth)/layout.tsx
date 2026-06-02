@@ -3,15 +3,15 @@ export const metadata = {
   // description: "Join or Create a Room in Runekeeper",
 };
 
-export default function LoginLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="login-container">
-      <div className="login-overlay" />
-      <div className="login-content">
+    <div>
+      <div className="bg-overlay" />
+      <div className="content-effects">
         {children}
       </div>
     </div>

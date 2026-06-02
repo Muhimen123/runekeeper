@@ -31,28 +31,29 @@ export default function LoginPage()
                 </Image>
             </button>
           </div>
-          <p className="text-beige text-2xl">Login</p>
+          <p className="text-beige text-2xl">Signup</p>
         </div>
         <div className="flex flex-col gap-3">
+          <AuthInput inputLabel="Name" type="name"></AuthInput>
           <AuthInput inputLabel="Email" type="email"></AuthInput>
           <AuthInput inputLabel="Password" type="password"></AuthInput>
         </div>
-        <RpgButtonV2 text="Login" onClick={()=>router.push("/homepage")}></RpgButtonV2>
-
-        <Image
-        className="absolute -left-5 -bottom-10"
-        src={"/assets/pebbles.png"}
-        alt="Pebble Graphic"
-        width={90}
-        height={90}
-        ></Image>
+        <RpgButtonV2 text="Sign Up" onClick={()=>router.push("/homepage")}></RpgButtonV2>
         
         <Image
-        className="absolute -right-5 -bottom-10"
+        className="absolute -left-5 -bottom-10"
         src={"/assets/stone_2.png"}
         alt="Pebble Graphic"
         width={120}
         height={120}
+        ></Image>
+
+        <Image
+        className="absolute -right-5 -top-10"
+        src={"/assets/quillV2.png"}
+        alt="Pebble Graphic"
+        width={80}
+        height={80}
         ></Image>
       </GlassContainer>
     </div>
