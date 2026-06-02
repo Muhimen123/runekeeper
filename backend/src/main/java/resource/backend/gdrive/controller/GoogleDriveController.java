@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import resource.backend.gdrive.service.GoogleDriveService;
 
 @RestController
-@RequestMapping("/api/v1/drive")
+@RequestMapping("/drive")
 @CrossOrigin(origins = "http://localhost:3000")
 public class GoogleDriveController {
 

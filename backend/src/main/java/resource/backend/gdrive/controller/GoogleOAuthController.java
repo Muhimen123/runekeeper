@@ -25,7 +25,7 @@ import resource.backend.gdrive.entity.UserToken;
 import resource.backend.gdrive.repository.UserTokenRepository;
 
 @RestController
-@RequestMapping("/api/v1/oauth")
+@RequestMapping("/oauth")
 //@RequiredArgsConstructor
 public class GoogleOAuthController {
 
