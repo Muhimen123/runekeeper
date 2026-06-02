@@ -311,37 +311,20 @@ function RoomViewerContent() {
       <div className="homepage-overlay" />
       
       <div 
-        className="homepage-content" 
+        className="homepage-content max-w-6xl" 
         style={{ display: "flex", flexDirection: "column", gap: "25px", alignItems: "center" }}
       >
-        <h1 
-          className="runekeeper-title"
-          style={{ fontSize: "28px", color: "#323921", textShadow: "3px 3px 0 #CEA864, -3px -3px 0 #CEA864, 3px -3px 0 #CEA864, -3px 3px 0 #CEA864" }}
-        >
-          Room Viewer
-        </h1>
-        
-        <p style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "14px", color: "#E8C493", textShadow: "2px 2px 0 #000", textAlign: "center", maxWidth: "600px" }}>
-          Welcome to the Room Viewer panel. View room details, archives, and directories below.
-        </p>
-
         {roomId ? (
           <div className="px-6 py-4 w-full flex justify-center">
             <DirectoryViewer roomId={roomId} userId={userId} />
           </div>
         ) : (
-          <div className="w-full max-w-2xl border border-[#eacf8c]/40 rounded-xl bg-white/10 backdrop-blur-[10px] p-8 shadow-xl text-center">
+          <div className="w-full max-w-6xl border border-[#eacf8c]/40 rounded-xl bg-white/10 backdrop-blur-[10px] p-8 shadow-xl text-center">
             <p className="font-mono text-sm text-[#CEA864]">
               No room is currently selected. Return to the homepage to select one.
             </p>
           </div>
         )}
-
-        <div className="rpg-wood-btn-wrap" style={{ marginTop: "10px" }}>
-          <button className="rpg-wood-btn" onClick={() => setIsSidebarOpen(true)}>
-            Open Sidebar
-          </button>
-        </div>
       </div>
 
       {/* Floating Gear/Map Trigger Button at the top right corner */}
