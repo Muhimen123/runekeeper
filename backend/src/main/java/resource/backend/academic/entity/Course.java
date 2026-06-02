@@ -9,7 +9,7 @@ import resource.backend.common.entity.BaseEntity;
 import resource.backend.folder.entity.Folder;
 
 @Entity
-@Table(name = "courses", uniqueConstraints = {@UniqueConstraint(columnNames = {"semester_id", "name"})})
+@Table(name = "courses", uniqueConstraints = { @UniqueConstraint(columnNames = { "semester_id", "name" }) })
 @Getter
 @Setter
 @NoArgsConstructor
