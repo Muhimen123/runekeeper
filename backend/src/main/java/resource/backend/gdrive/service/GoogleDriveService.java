@@ -107,4 +107,19 @@ public class GoogleDriveService {
         Drive drive = getDriveService(userId);
         drive.files().delete(fileId).execute();
     }
+
+    public File createFolder(String userId, String folderName, String parentFolderId) throws IOException {
+        Drive drive = getDriveService(userId);
+
+        File fileMetadata = new com.google.api.services.drive.model.File();
+        fileMetadata.setName(folderName);
+        fileMetadata.setMimeType("application/vnd.google-apps.folder");
+        if (parentFolderId != null && !parentFolderId.trim().isEmpty() && !parentFolderId.equalsIgnoreCase("root")) {
+            fileMetadata.setParents(List.of(parentFolderId));
+        }
+
+        return drive.files().create(fileMetadata)
+                .setFields("id, name, mimeType, webViewLink")
+                .execute();
+    }
 }
