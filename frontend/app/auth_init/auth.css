@@ -1,0 +1,243 @@
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('/assets/bg_front.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 20px;
+}
+
+/* Dark overlay to give depth and ensure buttons/text stand out */
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.auth-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.runekeeper-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.runekeeper-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 36px;
+  color: #323921;
+  text-shadow:
+    3px 3px 0 #CEA864,
+    -3px -3px 0 #CEA864,
+    3px -3px 0 #CEA864,
+    -3px 3px 0 #CEA864,
+    3px 0px 0 #CEA864,
+    -3px 0px 0 #CEA864,
+    0px 3px 0 #CEA864,
+    0px -3px 0 #CEA864,
+    0px 4px 10px rgba(0, 0, 0, 0.8);
+  letter-spacing: 2px;
+  user-select: none;
+  animation: pulseTitle 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseTitle {
+  0% {
+    text-shadow:
+      3px 3px 0 #CEA864,
+      -3px -3px 0 #CEA864,
+      3px -3px 0 #CEA864,
+      -3px 3px 0 #CEA864,
+      3px 0px 0 #CEA864,
+      -3px 0px 0 #CEA864,
+      0px 3px 0 #CEA864,
+      0px -3px 0 #CEA864,
+      0px 4px 10px rgba(0, 0, 0, 0.8);
+  }
+  100% {
+    text-shadow:
+      3px 3px 0 #CEA864,
+      -3px -3px 0 #CEA864,
+      3px -3px 0 #CEA864,
+      -3px 3px 0 #CEA864,
+      3px 0px 0 #CEA864,
+      -3px 0px 0 #CEA864,
+      0px 3px 0 #CEA864,
+      0px -3px 0 #CEA864,
+      0px 6px 15px rgba(206, 168, 100, 0.6);
+  }
+}
+
+.runekeeper-underline {
+  width: 110%;
+  height: 8px;
+  background-color: #00a2ff;
+  margin-top: 8px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.6),
+    0 0 10px rgba(0, 162, 255, 0.6);
+  border-radius: 2px;
+  border: 2px solid #005580;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.rpg-wood-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #7a9e35;
+  text-shadow:
+    2px 2px 0 #2e4a00,
+    -1px -1px 0 #2e4a00,
+    1px -1px 0 #2e4a00,
+    -1px  1px 0 #2e4a00;
+
+  background: #c8aa6e;
+  padding: 14px 0;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  display: inline-block;
+  letter-spacing: 0.05em;
+  width: 100%;
+  text-align: center;
+
+  /* Chamfered corners — diagonal cut, not rounded */
+  clip-path: polygon(
+    16px 0%,
+    calc(100% - 16px) 0%,
+    100% 16px,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    16px 100%,
+    0% calc(100% - 16px),
+    0% 16px
+  );
+
+  /* Triple ring border — use outline + drop shadow since clip-path hides box-shadow */
+  filter: drop-shadow(0 0 3px #4a3318)
+          drop-shadow(0 0 6px #8a6a3a)
+          drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+
+  transition: filter 80ms, transform 80ms;
+}
+
+/* Outer dark frame layer */
+.rpg-wood-btn-wrap {
+  display: inline-block;
+  position: relative;
+  padding: 6px;
+  background: #4a3318;
+  width: 340px;
+  clip-path: polygon(
+    12px 0%,
+    calc(100% - 12px) 0%,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0% calc(100% - 12px),
+    0% 12px
+  );
+}
+
+.rpg-wood-btn-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: #8a6a3a;
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
+  );
+  z-index: 0;
+}
+
+/* Inner inset border line */
+.rpg-wood-btn::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid #a08040;
+  clip-path: polygon(
+    8px 0%,
+    calc(100% - 8px) 0%,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0% calc(100% - 8px),
+    0% 8px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Corner green dots */
+.rpg-wood-btn::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  background:
+    radial-gradient(circle, #6b8c2a 3px, transparent 3px) 0    0    / 14px 14px no-repeat,
+    radial-gradient(circle, #6b8c2a 3px, transparent 3px) 100% 0    / 14px 14px no-repeat,
+    radial-gradient(circle, #6b8c2a 3px, transparent 3px) 0    100% / 14px 14px no-repeat,
+    radial-gradient(circle, #6b8c2a 3px, transparent 3px) 100% 100% / 14px 14px no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rpg-wood-btn:hover {
+  filter: drop-shadow(0 0 3px #4a3318)
+          drop-shadow(0 0 6px #8a6a3a)
+          drop-shadow(0 4px 8px rgba(0,0,0,0.6))
+          brightness(1.08);
+}
+
+.rpg-wood-btn:active {
+  transform: translateY(3px);
+  filter: drop-shadow(0 0 2px #4a3318)
+          drop-shadow(0 4px 4px rgba(0,0,0,0.4))
+          brightness(0.93);
+}
