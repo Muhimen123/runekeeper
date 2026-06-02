@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import "./sidebar.css";
 import ChatBox from "./ChatBox";
+import ProgressTracker from "./ProgressTracker";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ interface GameEvent {
   location: string;
 }
 
-type SidebarView = "menu" | "events" | "chat";
+type SidebarView = "menu" | "events" | "chat" | "progress";
 
 const DEFAULT_COURSES = ["CSE-315", "CSE-316", "CSE-317"];
 const DEFAULT_EVENT_TYPES = ["CT1", "Assignment", "Lab Quiz"];
@@ -191,6 +192,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <h2 className="rpg-sidebar-title" style={{ fontSize: "14px" }}>Ask anything!</h2>
             )}
 
+            {activeView === "progress" && (
+              <h2 className="rpg-sidebar-title">Track Progress</h2>
+            )}
+
             <button className="rpg-close-btn" onClick={onClose}>
               <img src="/assets/cancel.png" alt="Close" />
             </button>
@@ -210,7 +215,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </button>
               </div>
               <div className="rpg-wood-btn-wrap">
-                <button className="rpg-wood-btn">
+                <button className="rpg-wood-btn" onClick={() => setActiveView("progress")}>
                   Track Progress
                 </button>
               </div>
@@ -257,6 +262,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* AI Chat View */}
           {activeView === "chat" && (
             <ChatBox eventsCount={events.length} />
+          )}
+
+          {/* Track Progress View */}
+          {activeView === "progress" && (
+            <ProgressTracker />
           )}
 
         </div>
