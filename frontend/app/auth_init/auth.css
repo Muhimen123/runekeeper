@@ -118,7 +118,6 @@
   align-items: center;
 }
 
-/* From Uiverse.io by vinodjangid07 with slight responsive optimizations */
 .rpg-wood-btn {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 22px;
@@ -131,14 +130,14 @@
     -1px  1px 0 #2e4a00;
 
   background: #c8aa6e;
-  padding: 14px 60px;
+  padding: 14px 0;
   border: none;
   cursor: pointer;
   position: relative;
   white-space: nowrap;
   display: inline-block;
   letter-spacing: 0.05em;
-  min-width: 260px;
+  width: 100%;
   text-align: center;
 
   /* Chamfered corners — diagonal cut, not rounded */
@@ -167,6 +166,7 @@
   position: relative;
   padding: 6px;
   background: #4a3318;
+  width: 340px;
   clip-path: polygon(
     12px 0%,
     calc(100% - 12px) 0%,
