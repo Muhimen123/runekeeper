@@ -6,10 +6,13 @@ import Sidebar from "../components/Sidebar";
 import "../auth_init/auth.css";
 import "../homepage/homepage.css";
 
-interface FolderType {
-  id: string;
-  name: string;
-  mimeType: string;
+// CLEANED UP: Removed unused FolderType interface 
+
+interface CourseResponseType {
+  id: string;          // UUID of the Course record
+  name: string;        // Name of the course (e.g. "CSE-311")
+  semesterId: string;  // Bound Semester UUID
+  rootFolderId: string;// DB ID of the linked folder row
 }
 
 interface RoomDetailsType {
@@ -26,7 +29,7 @@ interface DirectoryViewerProps {
 
 function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
   const router = useRouter();
-  const [folders, setFolders] = useState<FolderType[]>([]);
+  const [folders, setFolders] = useState<CourseResponseType[]>([]);
   const [roomDetails, setRoomDetails] = useState<RoomDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,10 +41,11 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
-    const fetchRoomAndFolders = async () => {
+    const fetchRoomAndCourses = async () => {
       setLoading(true);
       setError(null);
       try {
+        // 1. Fetch container room/semester data
         const roomRes = await fetch(`http://localhost:8080/api/v1/rooms/${roomId}`);
         if (!roomRes.ok) {
           throw new Error("Failed to load room details.");
@@ -49,17 +53,15 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
         const roomData: RoomDetailsType = await roomRes.json();
         setRoomDetails(roomData);
 
-        if (roomData.driveFolderId) {
-          const foldersRes = await fetch(
-            `http://localhost:8080/api/v1/drive/folders?userId=${userId}&parentFolderId=${roomData.driveFolderId}`
-          );
-          if (foldersRes.ok) {
-            const foldersData = await foldersRes.json();
-            setFolders(foldersData || []);
-          } else {
-            console.warn("Failed to fetch folders under parent folder.");
-          }
+        // MODIFIED: Hit our specific backend relational schema rather than checking driveFolderId
+        const coursesRes = await fetch(`http://localhost:8080/api/v1/rooms/${roomId}/courses`);
+        if (coursesRes.ok) {
+          const coursesData = await coursesRes.json();
+          setFolders(coursesData || []);
+        } else {
+          console.warn("Failed to fetch relational courses mapped to this room.");
         }
+        
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Unable to sync directory.");
@@ -68,48 +70,44 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
       }
     };
 
-    fetchRoomAndFolders();
-  }, [roomId, userId]);
+    if (roomId) {
+      fetchRoomAndCourses();
+    }
+  }, [roomId]); // CLEANED UP: userId is no longer a dependency for fetching index schemas
 
   const handleAddFolder = async () => {
-  // 1. Remove the old parent folder ID check since courses don't use it anymore
-  if (!newFolderName.trim()) return; 
-  setCreating(true);
-  
-  try {
-    // 2. Change the endpoint to point to your CourseController path
-    // Note: The controller expects /rooms/{roomId}/courses, where roomId acts as the semesterId map
-    const res = await fetch(
-      `http://localhost:8080/api/v1/rooms/${roomId}/courses`, 
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // 3. Send the JSON payload instead of URL query parameters
-        body: JSON.stringify({
-          name: newFolderName.trim(),
-          semesterId: roomId // Passing the roomId parameter to bind to the semesterId field
-        }),
-      }
-    );
+    if (!newFolderName.trim()) return; 
+    setCreating(true);
+    
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/v1/rooms/${roomId}/courses`, 
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newFolderName.trim(),
+            semesterId: roomId 
+          }),
+        }
+      );
 
-    if (res.ok) {
-      const createdCourse = await res.json();
-      
-      // 4. Update your local state with the returned CourseResponse data
-      setFolders((prev) => [...prev, createdCourse]);
-      setNewFolderName("");
-      setIsAddModalOpen(false);
-    } else {
-      console.error("Failed to create Course structural infrastructure");
+      if (res.ok) {
+        const createdCourse = await res.json();
+        setFolders((prev) => [...prev, createdCourse]);
+        setNewFolderName("");
+        setIsAddModalOpen(false);
+      } else {
+        console.error("Failed to create Course structural infrastructure");
+      }
+    } catch (err) {
+      console.error("Error creating course workflow:", err);
+    } finally {
+      setCreating(false);
     }
-  } catch (err) {
-    console.error("Error creating course workflow:", err);
-  } finally {
-    setCreating(false);
-  }
-}; 
+  }; 
 
   if (loading) {
     return (
@@ -251,7 +249,7 @@ function DirectoryViewer({ roomId, userId }: DirectoryViewerProps) {
         </div>
       )}
 
-      {/* Add Course Button container with background circle removed and descriptive text added below */}
+      {/* Add Course Button container */}
       <div className="absolute bottom-4 right-4 flex flex-col items-center gap-1 z-20">
         <button
           className="hover:scale-110 active:scale-95 transition duration-150 cursor-pointer p-0"

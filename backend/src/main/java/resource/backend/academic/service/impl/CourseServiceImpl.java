@@ -19,6 +19,7 @@ import resource.backend.gdrive.service.GoogleDriveService;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -160,5 +161,12 @@ public class CourseServiceImpl implements CourseService {
                                 course.getUpdatedAt());
         }
 
+        @Override
+        public List<CourseResponse> getCoursesByRoomId(UUID roomId) {
+                // In your schema layout, roomId aligns with semesterId
+                return courseRepository.findBySemesterId(roomId).stream()
+                        .map(this::toResponse)
+                        .toList();
+        }
 
 }

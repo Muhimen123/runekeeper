@@ -5,6 +5,7 @@ import resource.backend.academic.dto.request.CreateCourseRequest;
 import resource.backend.academic.dto.request.UpdateCourseRequest;
 import resource.backend.academic.dto.response.CourseResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface CourseService {
@@ -28,4 +29,6 @@ public interface CourseService {
     void deleteCourse(
             UUID semesterId,
             UUID courseId);
+
+    List<CourseResponse> getCoursesByRoomId(UUID roomId);
 }
