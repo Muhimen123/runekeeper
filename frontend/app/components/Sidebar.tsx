@@ -268,13 +268,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {activeView === "progress" && (
             <div className="progress-tracker-container">
               {[
-                { id: "1", name: "Ch1", percentage: 10 },
-                { id: "2", name: "Ch2", percentage: 30 },
-                { id: "3", name: "Ch3", percentage: 50 },
-                { id: "4", name: "Ch4", percentage: 0 },
-                { id: "5", name: "Mordanality", percentage: 70 },
-                { id: "6", name: "Ch1", percentage: 0 },
-              ].map((item) => (
+  { id: "1", name: "Ch1 - Introduction", percentage: 10 },
+  { id: "2", name: "Ch2 - Software Processes", percentage: 30 },
+  { id: "3", name: "Ch3 - Agile Software Development", percentage: 50 },
+  { id: "4", name: "Ch4 - Requirements Engineering", percentage: 0 },
+  { id: "5", name: "Ch5 - System Modeling", percentage: 70 },
+  { id: "6", name: "Ch6 - Architectural Design", percentage: 0 },
+].map((item) => (
                 <div key={item.id} className="progress-row">
                   <div className="progress-header-info">
                     <img src="/assets/magic_openbook.png" alt="Magic Book Icon" className="progress-book-icon" />

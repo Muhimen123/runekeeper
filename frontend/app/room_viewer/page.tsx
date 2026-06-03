@@ -414,7 +414,7 @@ function RoomViewerContent() {
   }, []);
 
   return (
-    <div className="homepage-container">
+    <div className="homepage-container inside">
       <div className="homepage-overlay" />
       
       {/* Dynamic TopBar Embedded on Top */}
