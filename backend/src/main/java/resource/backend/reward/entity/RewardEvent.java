@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import resource.backend.common.entity.BaseEntity;
 import resource.backend.user.entity.User;
 import resource.backend.resource.entity.Resource;
@@ -24,8 +25,8 @@ public class RewardEvent extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Type(RewardActionUserType.class)
+    @Column(name = "action", nullable = false, columnDefinition = "reward_action")
     private RewardAction action;
 
     @Column(nullable = false)

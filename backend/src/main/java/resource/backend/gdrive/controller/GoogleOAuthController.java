@@ -11,22 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-// 3. Lombok Annotation Import
-//import lombok.RequiredArgsConstructor;
-
-// 4. Google API Client Imports
+// 3. Google API Client Imports
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 
-// 5. Your Database Repository Import
+// 4. Your Database Repository and Entity Imports
+import resource.backend.user.entity.User;
 import resource.backend.gdrive.entity.UserToken;
+import resource.backend.user.repository.UserRepository;
 import resource.backend.gdrive.repository.UserTokenRepository;
 
 @RestController
 @RequestMapping("/oauth")
-//@RequiredArgsConstructor
 public class GoogleOAuthController {
 
     @Value("${google.client-id}")
@@ -38,13 +36,16 @@ public class GoogleOAuthController {
     @Value("${google.redirect-uri}")
     private String redirectUri;
 
-    private final UserTokenRepository tokenRepository; // Your database repo to save tokens
+    private final UserTokenRepository tokenRepository;
+    private final UserRepository userRepository; // Added to resolve FK race condition
 
-    public GoogleOAuthController(UserTokenRepository tokenRepository) {
+    // Constructor injection for both required repositories
+    public GoogleOAuthController(UserTokenRepository tokenRepository, UserRepository userRepository) {
         this.tokenRepository = tokenRepository;
+        this.userRepository = userRepository;
     }
 
-    // 1. Redirect user to Google Auth inside GoogleOAuthController.java
+    // 1. Redirect user to Google Auth
     @GetMapping("/connect")
     public void connectGoogleDrive(@RequestParam String userId, HttpServletResponse response) throws IOException {
 
@@ -81,14 +82,36 @@ public class GoogleOAuthController {
         String accessToken = tokenResponse.getAccessToken();
         String refreshToken = tokenResponse.getRefreshToken();
 
-        // 1. Convert the state userId string into a java.util.UUID to match your database schema
+        // Convert the state userId string into a java.util.UUID to match your database schema
         java.util.UUID userId = java.util.UUID.fromString(userIdStr);
 
-        // 2. Calculate when the token expires (typically 3600 seconds from now)
+        // =====================================================================
+        // 🔥 JIT PROVISIONING STEP: Resolves PostgreSQL foreign key constraint
+        // =====================================================================
+        if (userRepository.findByAuthId(userId).isEmpty()) {
+            System.out.println("[OAuth Sync] User record completely missing. Safe provision execution triggered for: " + userId);
+
+            String fallbackName = "user_" + userIdStr.substring(0, 8);
+
+            User fallbackUser = new User();
+            // Assign the incoming UUID to BOTH identifiers to ensure database consistency
+            fallbackUser.setId(userId);     // Sets the primary key inherited from BaseEntity
+            fallbackUser.setAuthId(userId); // Sets your application unique auth column link
+
+            // Populate non-nullable database constraints
+            fallbackUser.setUsername(fallbackName);
+            fallbackUser.setDisplayName(fallbackName);
+            fallbackUser.setRewardPoints(0);
+
+            userRepository.save(fallbackUser);
+        }
+        // =====================================================================
+
+        // Calculate when the token expires (typically 3600 seconds from now)
         java.time.OffsetDateTime expiryTime = java.time.OffsetDateTime.now()
                 .plusSeconds(tokenResponse.getExpiresInSeconds());
 
-        // 3. Build the entity object using Lombok's Builder pattern
+        // Build the entity object using Lombok's Builder pattern
         UserToken tokenEntity = UserToken.builder()
                 .userId(userId)
                 .accessToken(accessToken)
@@ -96,10 +119,10 @@ public class GoogleOAuthController {
                 .expiryTime(expiryTime)
                 .build();
 
-        // 4. Save to DB. If userId already exists, JPA updates it. If not, it inserts it.
+        // Save to DB. The FK constraint is now guaranteed to pass.
         tokenRepository.save(tokenEntity);
 
-        // Redirect user back to Next.js dashboard
-        response.sendRedirect("http://localhost:3000/test");
+        // Redirect user back to Next.js application dashboard
+        response.sendRedirect("http://localhost:3000/homepage");
     }
 }

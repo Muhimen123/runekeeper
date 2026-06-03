@@ -2,11 +2,15 @@
 @import "tailwindcss";
 
 
+*, *::before, *::after {
+  font-family: "Press Start 2P", Arial, sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Press Start 2P", Arial;
+  font-family: "Press Start 2P", Arial, sans-serif;
   align-items: center;
   justify-content: center;
   min-height: 100vh;

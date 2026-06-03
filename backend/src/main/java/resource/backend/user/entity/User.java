@@ -33,4 +33,5 @@ public class User extends BaseEntity {
 
     @Column(name = "reward_points", nullable = false)
     private Integer rewardPoints = 0;
+
 }

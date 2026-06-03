@@ -1,10 +1,8 @@
 package resource.backend.resource.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Type;
 import resource.backend.common.entity.BaseEntity;
 import resource.backend.folder.entity.Folder;
 import resource.backend.user.entity.User;
@@ -23,7 +21,7 @@ public class Resource extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "mime_type", columnDefinition = "VARCHAR")
+    @Column(name = "mime_type")
     private String mimeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,8 +32,8 @@ public class Resource extends BaseEntity {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "resource_type", nullable = false)
+    @Type(ResourceTypeUserType.class)
+    @Column(name = "resource_type", nullable = false, columnDefinition = "resource_type")
     private ResourceType resourceType = ResourceType.OTHER;
 
     @Column(name = "drive_file_id", nullable = false, unique = true)
@@ -50,6 +48,7 @@ public class Resource extends BaseEntity {
     @Column(name = "view_count", nullable = false)
     private Integer viewCount = 0;
 
+    // Generated full-text search vector (read-only)
     @Column(name = "search_vector", insertable = false, updatable = false, columnDefinition = "tsvector")
     private String searchVector;
 }

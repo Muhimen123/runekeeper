@@ -58,6 +58,8 @@ export default function RoomTopBar({
       <style jsx>{`
         /* 1. Clear transparent topbar layout structure */
         .topbar {
+          position: relative;
+          z-index: 10;
           display: flex;
           align-items: center;
           justify-content: space-between;

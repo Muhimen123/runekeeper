@@ -323,9 +323,9 @@
 
 .rpg-modal-body {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   margin: 10px 0;
 }
 
@@ -345,7 +345,6 @@
   padding: 10px 14px;
   color: #2B331A;
   width: 100%;
-  max-width: 240px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   outline: none;
   transition: border-color 0.15s ease;
