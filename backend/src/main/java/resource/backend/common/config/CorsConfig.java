@@ -1,4 +1,4 @@
-package resource.backend.resource.config;
+package resource.backend.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

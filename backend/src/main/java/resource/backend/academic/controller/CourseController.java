@@ -56,11 +56,14 @@ public class CourseController {
         @PostMapping
         public CourseResponse createCourse(
                 @PathVariable UUID roomId,
+                @RequestHeader(value = "X-User-Id", required = false) String userIdHeader,
                 @RequestBody @Valid CreateCourseRequest request) {
                 System.out.println("CONTROLLER HIT");
 
-                // Temporary hardcoded Demo User ID string matching your Next.js client
-                String temporaryUserIdStr = "2deb6920-19b0-4fa9-aa5f-6364b03bce5d";
+                // Temporary hardcoded fallback Demo User ID string matching your Next.js client if header is missing
+                String temporaryUserIdStr = (userIdHeader != null && !userIdHeader.trim().isEmpty())
+                        ? userIdHeader
+                        : "2deb6920-19b0-4fa9-aa5f-6364b03bce5d";
 
                 // Pass all 3 required parameters to resolve the compilation error
                 return courseService.createCourse(

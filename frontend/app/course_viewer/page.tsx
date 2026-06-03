@@ -174,7 +174,7 @@ export function CourseViewerContent({ courseId, userId, onCourseDetailsFetched }
     try {
       const formData = new FormData();
       formData.append("file", selectedFile); 
-      formData.append("userId", userId); 
+      formData.append("ownerId", userId); 
       formData.append("folderId", currentFolderId);
 
       const res = await fetch("http://localhost:8080/api/v1/resources/upload", {
