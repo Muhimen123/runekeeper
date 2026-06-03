@@ -32,8 +32,8 @@ public class Resource extends BaseEntity {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-    @Type(ResourceTypeUserType.class)
-    @Column(name = "resource_type", nullable = false, columnDefinition = "resource_type")
+    @Convert(converter = ResourceTypeConverter.class)
+    @Column(name = "resource_type", nullable = false)
     private ResourceType resourceType = ResourceType.OTHER;
 
     @Column(name = "drive_file_id", nullable = false, unique = true)

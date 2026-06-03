@@ -1,6 +1,7 @@
 package resource.backend.folder.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import resource.backend.folder.entity.Folder;
 
@@ -9,16 +10,24 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface FolderRepository extends JpaRepository<Folder, UUID> {
+public interface FolderRepository extends JpaRepository<Folder, java.util.UUID> {
 
-    // Your existing methods (Keep these!)
     Optional<Folder> findByOwnerIdAndNameAndParentIsNull(UUID ownerId, String name);
-    Optional<Folder> findByDriveFolderId(String driveFolderId);
 
-    // --- ADD THESE FOR THE FEATURE ---
-    // Finds all subfolders inside a specific parent folder chamber
     List<Folder> findByParentId(UUID parentId);
 
-    // Backup: Finds folders at the absolute top-level root (where parent_id IS NULL)
-    List<Folder> findByParentIdIsNull();
+    Optional<Folder> findByDriveFolderId(String driveFolderId);
+
+    @Query(value = """
+            WITH RECURSIVE descendants AS (
+                SELECT id FROM folders WHERE id = :rootFolderId
+                UNION ALL
+                SELECT f.id FROM folders f
+                INNER JOIN descendants d ON f.parent_id = d.id
+            )
+            SELECT f.* FROM folders f
+            INNER JOIN descendants d ON f.id = d.id
+            WHERE LOWER(f.name) LIKE LOWER(CONCAT('%%', :keyword, '%%'))
+            """, nativeQuery = true)
+    List<Folder> findMatchingDescendants(UUID rootFolderId, String keyword);
 }
