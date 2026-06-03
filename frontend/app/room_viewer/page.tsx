@@ -150,13 +150,18 @@ function DirectoryViewer({ roomId, userId, onRoomDetailsFetched }: DirectoryView
     setCreating(true);
     
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (userId) {
+        headers["X-User-Id"] = userId;
+      }
+
       const res = await fetch(
         `http://localhost:8080/api/v1/rooms/${roomId}/courses`, 
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: headers,
           body: JSON.stringify({
             name: newFolderName.trim(),
             semesterId: roomId 
@@ -399,7 +404,14 @@ function RoomViewerContent() {
   const [roomDetails, setRoomDetails] = useState<RoomDetailsType | null>(null);
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
-  const userId = "2deb6920-19b0-4fa9-aa5f-6364b03bce5d"; // Demo static User ID
+  const [userId, setUserId] = useState<string>("2deb6920-19b0-4fa9-aa5f-6364b03bce5d"); // Default static User ID
+
+  useEffect(() => {
+    const id = localStorage.getItem("user_id");
+    if (id) {
+      setUserId(id);
+    }
+  }, []);
 
   return (
     <div className="homepage-container">
