@@ -13,6 +13,10 @@
   padding: 0;   /* remove 40px */
 }
 
+.homepage-container.inside {
+  background-image: url('/assets/bg_inside.jpeg');
+}
+
 .homepage-overlay {
   position: absolute;
   inset: 0;

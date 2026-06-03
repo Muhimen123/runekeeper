@@ -570,7 +570,7 @@ function CourseFolderViewerSuspended() {
   }, []);
 
   return (
-    <div className="homepage-container">
+    <div className="homepage-container inside">
       <div className="homepage-overlay" />
 
       {/* Dynamic CourseTopBar */}
